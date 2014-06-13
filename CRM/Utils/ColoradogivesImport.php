@@ -96,8 +96,8 @@ class CRM_Utils_ColoradogivesImport {
      * Get Honoy Types
      */
     function honor_type() {
-        $honorType = CRM_Core_PseudoConstant::honor();
-        $this->honor_type = $honorType;
+        $honorType = civicrm_api3('contribution', 'getoptions', array('field' => 'honor_type_id'));
+        $this->honor_type = $honorType['values'];
     }
     /*
      * Create /Get Payment Instrument ID

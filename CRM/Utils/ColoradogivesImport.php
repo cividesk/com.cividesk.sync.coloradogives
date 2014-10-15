@@ -362,10 +362,10 @@ class CRM_Utils_ColoradogivesImport {
                                        )
                                  );
         }
-        $state_id = $country_id = 'null';
+        $state_id = $country_id = '';
         if ($values['H'] || $values['I'] || $values['J'] || $values['L']) {
             if ( $values['M']) {
-                if ($values['M'] == 'United States of America') {
+                if ($values['M'] == 'United States of America' || $values['M'] == 'USA' ) {
                     $values['M'] = 'United States';
                 }
                 $country_id = CRM_Utils_Array::key($values['M'], $this->country_list);

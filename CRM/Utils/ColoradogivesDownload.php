@@ -77,7 +77,7 @@ class CRM_Utils_ColoradogivesDownload {
         $curl_session = $this->curl_setup($url);
         $page = curl_exec($curl_session);
         $info = curl_getinfo($curl_session);
-        $xls_path = dirname(__FILE__). DIRECTORY_SEPARATOR . 'files'. DIRECTORY_SEPARATOR . $this->file_name;
+        $xls_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $this->file_name;
         // Save Xls file
         file_put_contents($xls_path, $page );
     }

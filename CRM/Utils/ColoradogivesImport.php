@@ -141,7 +141,7 @@ class CRM_Utils_ColoradogivesImport {
         //echo "\nLoading file " . $this->file_name . '<br/>';
         
         $realpath      = dirname(__FILE__);
-        $inputFileName = $realpath. DIRECTORY_SEPARATOR .  'files'. DIRECTORY_SEPARATOR. $this->file_name;
+        $inputFileName = sys_get_temp_dir() . DIRECTORY_SEPARATOR. $this->file_name;
         $objPHPExcel   = PHPExcel_IOFactory::load($inputFileName);
         //echo "\n<br/>import file<br/>\n";
         //echo '<hr />';

@@ -8,7 +8,7 @@ class CRM_Utils_ColoradogivesDownload {
     var $org_id   = "";
     
     function __construct() {
-        $this->cookies = dirname(__FILE__). DIRECTORY_SEPARATOR . 'files'. DIRECTORY_SEPARATOR. 'cookies.txt';
+        $this->cookies = sys_get_temp_dir() . DIRECTORY_SEPARATOR. 'cookies.txt';
         //unlink($this->cookies);
         $settings = CRM_Utils_Coloradogives::getSettings();
         if ( empty($settings) || count($settings) < 3 ) {

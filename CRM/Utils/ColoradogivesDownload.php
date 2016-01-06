@@ -9,7 +9,7 @@ class CRM_Utils_ColoradogivesDownload {
     
     function __construct() {
         $this->cookies = sys_get_temp_dir() . DIRECTORY_SEPARATOR. 'cookies.txt';
-        //unlink($this->cookies);
+        unlink($this->cookies);
         $settings = CRM_Utils_Coloradogives::getSettings();
         if ( empty($settings) || count($settings) < 3 ) {
             echo "Please check username, password and organization id";
@@ -44,8 +44,7 @@ class CRM_Utils_ColoradogivesDownload {
     
     }
     
-    function download() {
-    
+    function download($file_name) {
         // STEP 1
         $url = "https://www.coloradogives.org";
         $curl_session = $this->curl_setup($url);
@@ -77,7 +76,7 @@ class CRM_Utils_ColoradogivesDownload {
         $curl_session = $this->curl_setup($url);
         $page = curl_exec($curl_session);
         $info = curl_getinfo($curl_session);
-        $xls_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $this->file_name;
+        $xls_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $file_name;
         // Save Xls file
         file_put_contents($xls_path, $page );
     }

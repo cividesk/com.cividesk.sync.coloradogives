@@ -131,7 +131,7 @@ class CRM_Utils_ColoradogivesImport {
     /*
      * Parase XSL uinsg PHPExcel Library
      */
-    function paraseXls() {
+    function paraseXls($file_name) {
         // Include Excel library
         require_once 'PHPExcel/IOFactory.php';
         
@@ -141,7 +141,7 @@ class CRM_Utils_ColoradogivesImport {
         //echo "\nLoading file " . $this->file_name . '<br/>';
         
         $realpath      = dirname(__FILE__);
-        $inputFileName = sys_get_temp_dir() . DIRECTORY_SEPARATOR. $this->file_name;
+        $inputFileName = sys_get_temp_dir() . DIRECTORY_SEPARATOR. $file_name;
         $objPHPExcel   = PHPExcel_IOFactory::load($inputFileName);
         //echo "\n<br/>import file<br/>\n";
         //echo '<hr />';
@@ -228,7 +228,7 @@ class CRM_Utils_ColoradogivesImport {
                     }
                 } catch (Exception $e) {
                     $mes = 'process_data Caught exception: '. $e->getMessage();
-                    crm_core_error::debug('Exception', $mes);
+                    crm_core_error::debug_var('Exception', $mes);
                 }
             }
         }
@@ -457,9 +457,8 @@ class CRM_Utils_ColoradogivesImport {
             $result = civicrm_api( 'contribution','create',$params );
         } catch (Exception $e) {
             $mes =  'create_contribution Caught exception: '. $e->getMessage();
-            crm_core_error::debug('Exception', $mes);
+            crm_core_error::debug_var('Exception', $mes);
         }
-        
         if ($result['is_error'] == 1 ) {
             return;
         }
@@ -481,7 +480,7 @@ class CRM_Utils_ColoradogivesImport {
                     $contributionSoftDAO->save();
                 } catch (Exception $e) {
                     $mes =  'Create soft Contribution Caught exception: '. $e->getMessage();
-                    crm_core_error::debug('Exception', $mes);
+                    crm_core_error::debug_var('Exception', $mes);
                 }
             }
         }

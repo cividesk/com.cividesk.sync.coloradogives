@@ -187,7 +187,9 @@ class CRM_Utils_ColoradogivesImport {
                                     function($data) use($last_date, &$data_array, &$recent_date) {
                                         $date = date('Ymd', strtotime($data['A']));
                                         // filter data using last import date
-                                        if ( $date > $last_date ) {
+                                        // avoid today data, cron may run at any time, that will miss rest of the day data.
+                                        // Note : date does not have time in downloaded file so we can't restrict using time
+                                        if ( $date > $last_date && $date <= date('Ymd', strtotime("-1 days"))) {
                                             $email_index = $data['G'] ? $data['G'] : 'XX';
                                             $data_array[$email_index][] =$data;
                                             // Get most recent date from xls used for set last import date after completion of import job

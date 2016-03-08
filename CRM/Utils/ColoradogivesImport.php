@@ -142,6 +142,22 @@ class CRM_Utils_ColoradogivesImport {
         
         $realpath      = dirname(__FILE__);
         $inputFileName = sys_get_temp_dir() . DIRECTORY_SEPARATOR. $file_name;
+
+        $valid = false;
+        $types = array('Excel2007', 'Excel5');
+        foreach ($types as $type) {
+          $reader = PHPExcel_IOFactory::createReader($type);
+          if ($reader->canRead($inputFileName)) {
+            $valid = true;
+            break;
+          }
+        }
+        if (!$valid) {
+          $errors = $_SERVER['DOMAIN'] . " : File Downloaded is not valid.";
+          mail('team-ops@cividesk.com', 'ERROR in coloradogives extension', $errors, 'From: shiva@cividesk.com' . CRLF);
+          return $errors;
+        }
+
         $objPHPExcel   = PHPExcel_IOFactory::load($inputFileName);
         //echo "\n<br/>import file<br/>\n";
         //echo '<hr />';

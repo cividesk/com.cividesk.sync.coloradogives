@@ -68,7 +68,7 @@ class CRM_Utils_ColoradogivesDownload {
         $url          = "https://www.coloradogives.org/admin/index.php?section=Organizations.donationInformation.donations&action=list&fwID=". $this->org_id;
         $curl_session = $this->curl_setup($url);
         $page = curl_exec($curl_session);
-        preg_match_all('index\.php\?ajaxRequest=\d{1,2}&ajaxFunction=export', $page, $match);
+        preg_match_all('/index\.php\?ajaxRequest=\d{1,2}&ajaxFunction=export/mi', $page, $match);
         $exportUrl = $match[0][0];
         
         // STEP 4

@@ -131,7 +131,7 @@ class CRM_Utils_ColoradogivesImport {
     /*
      * Parase XSL uinsg PHPExcel Library
      */
-    function paraseXls() {
+    function paraseXls($file_name) {
         // Include Excel library
         require_once 'PHPExcel/IOFactory.php';
         
@@ -141,7 +141,23 @@ class CRM_Utils_ColoradogivesImport {
         //echo "\nLoading file " . $this->file_name . '<br/>';
         
         $realpath      = dirname(__FILE__);
-        $inputFileName = $realpath. DIRECTORY_SEPARATOR .  'files'. DIRECTORY_SEPARATOR. $this->file_name;
+        $inputFileName = sys_get_temp_dir() . DIRECTORY_SEPARATOR. $file_name;
+
+        $valid = false;
+        $types = array('Excel2007', 'Excel5');
+        foreach ($types as $type) {
+          $reader = PHPExcel_IOFactory::createReader($type);
+          if ($reader->canRead($inputFileName)) {
+            $valid = true;
+            break;
+          }
+        }
+        if (!$valid) {
+          $errors = $_SERVER['DOMAIN'] . " : File Downloaded is not valid.";
+          mail('team-ops@cividesk.com', 'ERROR in coloradogives extension', $errors, 'From: shiva@cividesk.com' . CRLF);
+          return $errors;
+        }
+
         $objPHPExcel   = PHPExcel_IOFactory::load($inputFileName);
         //echo "\n<br/>import file<br/>\n";
         //echo '<hr />';
@@ -187,7 +203,9 @@ class CRM_Utils_ColoradogivesImport {
                                     function($data) use($last_date, &$data_array, &$recent_date) {
                                         $date = date('Ymd', strtotime($data['A']));
                                         // filter data using last import date
-                                        if ( $date > $last_date ) {
+                                        // avoid today data, cron may run at any time, that will miss rest of the day data.
+                                        // Note : date does not have time in downloaded file so we can't restrict using time
+                                        if ( $date > $last_date && $date <= date('Ymd', strtotime("-1 days"))) {
                                             $email_index = $data['G'] ? $data['G'] : 'XX';
                                             $data_array[$email_index][] =$data;
                                             // Get most recent date from xls used for set last import date after completion of import job
@@ -228,7 +246,7 @@ class CRM_Utils_ColoradogivesImport {
                     }
                 } catch (Exception $e) {
                     $mes = 'process_data Caught exception: '. $e->getMessage();
-                    crm_core_error::debug('Exception', $mes);
+                    crm_core_error::debug_var('Exception', $mes);
                 }
             }
         }
@@ -457,9 +475,8 @@ class CRM_Utils_ColoradogivesImport {
             $result = civicrm_api( 'contribution','create',$params );
         } catch (Exception $e) {
             $mes =  'create_contribution Caught exception: '. $e->getMessage();
-            crm_core_error::debug('Exception', $mes);
+            crm_core_error::debug_var('Exception', $mes);
         }
-        
         if ($result['is_error'] == 1 ) {
             return;
         }
@@ -481,7 +498,7 @@ class CRM_Utils_ColoradogivesImport {
                     $contributionSoftDAO->save();
                 } catch (Exception $e) {
                     $mes =  'Create soft Contribution Caught exception: '. $e->getMessage();
-                    crm_core_error::debug('Exception', $mes);
+                    crm_core_error::debug_var('Exception', $mes);
                 }
             }
         }

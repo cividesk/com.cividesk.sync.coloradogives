@@ -58,12 +58,12 @@ function _coloradogives_getCRMVersion() {
 }
 
 function civicrm_api3_job_cogives_import($params = null) {
-
+    $file = CRM_Utils_File::makeFileName('Export-anonymized.xls');
     $coloradogives_download = new CRM_Utils_ColoradogivesDownload();
-    $coloradogives_download->download();
+    $coloradogives_download->download($file);
     try {
         $coloradogives_import = new CRM_Utils_ColoradogivesImport();
-        $log = $coloradogives_import->paraseXls();
+        $log = $coloradogives_import->paraseXls($file);
         $return['is_error']      = 0;
         $return['error_message'] = '';
         $return['values']        = $log;

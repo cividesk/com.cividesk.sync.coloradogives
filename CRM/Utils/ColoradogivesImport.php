@@ -178,7 +178,7 @@ class CRM_Utils_ColoradogivesImport {
      * Get Last Import Date
      */
     function get_last_import_date() {
-        $sql = "select value as last_import_date from civicrm_setting where group_name ='Import Job' AND name= 'last_import_date'";
+        $sql = "select value as last_import_date from civicrm_setting where name= 'last_import_date'";
         $last_import_date = CRM_Core_DAO::singleValueQuery($sql);
         $this->last_import_date = $last_import_date;
     }
@@ -187,7 +187,7 @@ class CRM_Utils_ColoradogivesImport {
      * Set next Import Date
      */
     function set_next_import_date() {
-        $sql = "update civicrm_setting set value = '{$this->next_import_date}' where group_name ='Import Job' AND name = 'last_import_date' ";
+        $sql = "update civicrm_setting set value = '{$this->next_import_date}' where name = 'last_import_date' ";
         CRM_Core_DAO::singleValueQuery($sql);
     
     }

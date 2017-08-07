@@ -12,7 +12,7 @@ function coloradogives_civicrm_config(&$config) {
 
 function coloradogives_civicrm_disable() {
     CRM_Core_DAO::executeQuery("DELETE FROM civicrm_job WHERE api_action = 'cogives_import'");
-    CRM_Core_DAO::executeQuery("DELETE FROM civicrm_setting where group_name ='Import Job' AND name= 'last_import_date'");
+    CRM_Core_DAO::executeQuery("DELETE FROM civicrm_setting where name= 'last_import_date'");
 }
 
 function coloradogives_civicrm_enable() {
@@ -47,7 +47,11 @@ function coloradogives_civicrm_enable() {
                                    array( 1 => array(CIVICRM_DOMAIN_ID, 'Integer') )
                                    );
     }
+  if ($version >= 4.7) {
+    $sql = "INSERT INTO civicrm_setting(name, value, domain_id) values ('last_import_date', '0', %1)";
+  } else {
     $sql = "INSERT INTO civicrm_setting(group_name, name, value, domain_id) values ('Import Job', 'last_import_date', '0', %1)";
+  }
     CRM_Core_DAO::executeQuery($sql, array( 1 => array(CIVICRM_DOMAIN_ID, 'Integer') ) );
 }
 
@@ -80,7 +84,7 @@ function civicrm_api3_job_cogives_import($params = null) {
 function coloradogives_civicrm_navigationMenu( &$params ) {
     // Add menu entry for extension administration page
     _coloradogives_cividesk_insert_navigationMenu($params, 
-                                               'Administer/Customize Data and Screens', 
+                                               'Administer/Customize Data and Screens',
                                                   array(
                                                         'name'       => 'Colorado Gives',
                                                         'url'        => 'civicrm/admin/setting/coloradogives',
